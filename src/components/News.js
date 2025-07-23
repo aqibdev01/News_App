@@ -1,8 +1,21 @@
 import React, { Component } from "react";
 import NewsItem from "./Newsitem";
 import Spinner from "./Spinner";
+import PropTypes from 'prop-types';
 
 export default class News extends Component {
+  static deafultProps = {
+    country: "us",
+    category: "general",
+    pageSize: 5,
+  }
+
+  static propTypes = {
+    country: PropTypes.string,
+    category: PropTypes.string,
+    pageSize: PropTypes.number,
+  };
+
   constructor(props) {
     super();
     this.state = {
@@ -14,9 +27,13 @@ export default class News extends Component {
   }
 
   async componentDidMount() {
-    const api_key = process.env.REACT_APP_YOUR_API_KEY;
-    let url = `${api_key}&page=${1}&pageSize=${this.props.pageSize}`;
-    this.setState({loading: true});
+    const newsUrl = process.env.REACT_APP_YOUR_URL;
+    const api = process.env.REACT_APP_YOUR_API_KEY;
+    let url = `${newsUrl}country=${this.props.country}&category=${
+      this.props.category
+    }&apiKey=${api}&page=${1}&pageSize=${this.props.pageSize}`;
+    console.log(url);
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -27,11 +44,14 @@ export default class News extends Component {
   }
 
   handlePreviousClick = async () => {
-    const api_key = process.env.REACT_APP_YOUR_API_KEY;
-    let url = `${api_key}&page=${
-      this.state.page - 1
-    }&pageSize=${this.props.pageSize}`;
-    this.setState({loading: true});
+    const newsUrl = process.env.REACT_APP_YOUR_URL;
+    const api = process.env.REACT_APP_YOUR_API_KEY;
+    let url = `${newsUrl}country=${this.props.country}&category=${
+      this.props.category
+    }&apiKey=${api}&page=${this.state.page - 1}&pageSize=${
+      this.props.pageSize
+    }`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -42,11 +62,14 @@ export default class News extends Component {
   };
 
   handleNextClick = async () => {
-    const api_key = process.env.REACT_APP_YOUR_API_KEY;
-    let url = `${api_key}&page=${
-      this.state.page + 1
-    }&pageSize=${this.props.pageSize}`;
-    this.setState({loading: true});
+    const newsUrl = process.env.REACT_APP_YOUR_URL;
+    const api = process.env.REACT_APP_YOUR_API_KEY;
+    let url = `${newsUrl}country=${this.props.country}&category=${
+      this.props.category
+    }&apiKey=${api}&page=${this.state.page + 1}&pageSize=${
+      this.props.pageSize
+    }`;
+    this.setState({ loading: true });
     let data = await fetch(url);
     let parsedData = await data.json();
     this.setState({
@@ -60,20 +83,24 @@ export default class News extends Component {
     return (
       <div className="container my-3">
         <h2>News Agent - Headlines</h2>
-        {this.state.loading && <Spinner/>}
+        {this.state.loading && <Spinner />}
         <div className="row">
-          {!this.state.loading && this.state.articles.map((element) => {
-            return (
-              <div className="col md-4" key={element.url}>
-                <NewsItem
-                  title={element.title}
-                  description={element.description}
-                  imageUrl={element.urlToImage}
-                  newsUrl={element.url}
-                />
-              </div>
-            );
-          })}
+          {!this.state.loading &&
+            this.state.articles.map((element) => {
+              return (
+                <div className="col md-4" key={element.url}>
+                  <NewsItem
+                    title={element.title}
+                    description={element.description}
+                    imageUrl={element.urlToImage}
+                    newsUrl={element.url}
+                    author={element.author?element.author:"Unknown"}
+                    postedAt={new Date(element.publishedAt).toUTCString()}
+                    sourceName={element.source.name}
+                  />
+                </div>
+              );
+            })}
         </div>
         <div className="container d-flex justify-content-around">
           <button
