@@ -18,7 +18,7 @@ export default class Newsitem extends Component {
           <div className="card-body">
             <ul className="list-group border-0">
               <li className="list-group-item border-0 d-flex align-items-start">
-                <span className="badge text-bg-primary rounded-pill me-2">
+                <span className="badge text-bg-info rounded-pill me-2">
                   {sourceName}
                 </span>
                 <div className="ms-2">
@@ -29,8 +29,8 @@ export default class Newsitem extends Component {
 
             <h5 className="card-title">{title}</h5>
             <p className="card-text">{description}</p>
-            <p class="card-text">
-              <small class="text-body-secondary">
+            <p className="card-text">
+              <small className="text-body-secondary">
                 By {author} on
                 <br />
                 {postedAt}
